@@ -3,7 +3,7 @@ from typing import Optional, Type, TypeVar
 
 from flask_sqlalchemy import SQLAlchemy
 
-from .compat import basestring
+from src.compat import basestring
 
 T = TypeVar("T", bound="PkModel")
 

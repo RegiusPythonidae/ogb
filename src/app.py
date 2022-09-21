@@ -1,27 +1,13 @@
 from flask import Flask
 from src.extensions import extensions, extensions_with_db, login_manager
-from src.database import db
-from src.settings import Config
+from src.extensions.database import db
 
 
 def import_models():
     # User models
-    from src.modules.user.model import (
-        UserModel,
-        RoleModel,
-        UserStudentsModel,
-        UserCompleted,
-        UserCourseModel
-    )
 
     # Course models
-    from src.modules.courses.models import (
-        LanguageModel,
-        CourseModel,
-        LessonModel,
-        TopicModel,
-        ExerciseModel
-    )
+    pass
 
 
 def register_extensions(app):
@@ -40,7 +26,7 @@ def register_blueprints(app: Flask):
     param app: Flask application
     """
     # To check if app contains blueprints we need to be inside the app context
-    from src.utils import blueprints
+    from src.blueprints import blueprints
 
     if not blueprints and app.get("CHECK_FOR_BLUEPRINTS") is True:
         message = "The list of blueprints is empty. App won't have any blueprints."
@@ -66,12 +52,13 @@ def configure_logger(app):
     pass
 
 
-def create_app(config_object=Config):
+def create_app(config_object="src.settings.DevelopmentConfig"):
     """Create application factory, as explained here: https://flask.pocoo.org/docs/patterns/appfactories/.
 
     :param config_object: The configuration object to use.
     """
     app = Flask(__name__)
+    print(config_object)
     app.config.from_object(config_object)
     app.config["DEBUG"] = True
     register_extensions(app)
