@@ -44,3 +44,6 @@ Flask-Admin==1.6.0
 
 # API
 flask-restx==0.5.1
+
+# Requests
+requests~=2.28.1
