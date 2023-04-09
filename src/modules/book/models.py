@@ -1,7 +1,11 @@
+import logging
 import os
 import os.path as op
+import xml.etree.ElementTree as ET
+from xml.dom import minidom
 
-from flask import current_app
+from flask import current_app, url_for, Response
+from ftfy import fix_encoding
 
 from src.extensions.database import PkModel, db, reference_col
 from src.tools.docx_processor import (
@@ -25,21 +29,39 @@ def is_new_chapter(text):
     return text.isdigit()
 
 
+def prettify(book) -> str:
+    """Return a pretty-printed XML string for the Element.
+    """
+
+    # fix what causes following error when converting to string:
+    #     if "&" in text:
+    # TypeError: argument of type 'NoneType' is not iterable
+
+    rough_string = ET.tostring(book, encoding='utf-8', method='xml')
+    # reparsed = minidom.parseString(rough_string)
+    # return reparsed.toprettyxml(indent="  ")
+    return rough_string
+
+
 class Books(PkModel):
     title = db.Column(db.String, unique=False, nullable=False)
-
     edition = db.Column(db.String, unique=False, nullable=True)
-    editor = db.Column(db.String, unique=False, nullable=True)
-    email = db.Column(db.String, unique=False, nullable=True)
+
+    recension = db.Column(db.String, unique=False, nullable=True)
     publisher = db.Column(db.String, unique=False, nullable=True)
     publication_place = db.Column(db.String, unique=False, nullable=True)
     publication_date = db.Column(db.DateTime, unique=False, nullable=True)
-    source = db.Column(db.String, unique=False, nullable=True)
+    author_of_the_electronic_edition = db.Column(db.String, unique=False, nullable=True)
+    source_of_main_text = db.Column(db.String, unique=False, nullable=True)
     location = db.Column(db.String, unique=False, nullable=True)
     date = db.Column(db.DateTime, unique=False, nullable=True)
+    sources_for_variant_readings = db.Column(db.String, unique=False, nullable=True)
     additional_details = db.Column(db.String, unique=False, nullable=True)
-
     file_path = db.Column(db.String, unique=False, nullable=True)
+
+    editor = db.Column(db.String, unique=False, nullable=True)
+    email = db.Column(db.String, unique=False, nullable=True)
+
     greek_csv_path = db.Column(db.String, unique=False, nullable=True)
     chapters = db.relationship("Chapters", backref="books", lazy=True, cascade="all, delete")
     length = db.Column(db.Integer, default=0)
@@ -49,17 +71,25 @@ class Books(PkModel):
             title,
             file_path,
             edition=None,
-            editor=None,
-            email=None,
+            recension=None,
             publisher=None,
             publication_place=None,
             publication_date=None,
-            source=None,
+            author_of_the_electronic_edition=None,
+            source_of_main_text=None,
             location=None,
             date=None,
+            sources_for_variant_readings=None,
             additional_details=None,
+            editor=None,
+            email=None,
+            greek_csv_path=None,
     ):
 
+        self.greek_csv_path = greek_csv_path
+        self.sources_for_variant_readings = sources_for_variant_readings
+        self.source_of_main_text = source_of_main_text
+        self.author_of_the_electronic_edition = author_of_the_electronic_edition
         self.title = title
         self.file_path = file_path
 
@@ -69,7 +99,6 @@ class Books(PkModel):
         self.publisher = publisher
         self.publication_place = publication_place
         self.publication_date = publication_date
-        self.source = source
         self.location = location
         self.date = date
         self.additional_details = additional_details
@@ -109,7 +138,14 @@ class Books(PkModel):
                 continue
 
             # if paragraph contains text to process
-            if parts := split_paragraph_on_comma(text):
+            try:
+                parts = split_paragraph_on_comma(text)
+            except ValueError as error:
+                message = f"At chapter {chapter.index} paragraph {previous_index}: {error}"
+                logging.error(message)
+                continue
+
+            if parts is not None:
                 # read index and content of paragraph
                 current_index, current_text = parts
                 # if new index
@@ -130,12 +166,6 @@ class Books(PkModel):
                 else:
                     paragraph.add_notes(current_text)
 
-    def __len__(self):
-        return self.length
-
-    def __repr__(self):
-        return f"{self.title}"
-
     def add_chapter(self, chapter):
         self.chapters.append(chapter)
         self.length += 1
@@ -147,6 +177,62 @@ class Books(PkModel):
     def get_chapter(self, index):
         return Chapters.query.filter_by(book_id=self.id, index=index).first()
 
+    def get_url(self):
+        return url_for("book.book_view", book_id=self.id)
+
+    def export_to_XML(self):
+        """
+        Export the book to XML format including all chapters and paragraphs
+        with their notes and tags.
+        """
+        # create the file structure
+        book = ET.Element('book')
+
+        # add book metadata
+        metadata = ET.SubElement(book, 'metadata')
+        if self.title: ET.SubElement(metadata, 'Title').text = self.title
+        if self.edition: ET.SubElement(metadata, 'Edition').text = self.edition
+        if self.recension: ET.SubElement(metadata, 'Recension').text = self.recension
+        if self.publisher: ET.SubElement(metadata, 'Publisher').text = self.publisher
+        if self.publication_place: ET.SubElement(metadata, 'Publication place').text = self.publication_place
+        if self.publication_date: ET.SubElement(metadata, 'Publication date').text = self.publication_date
+        if self.author_of_the_electronic_edition:
+            ET.SubElement(metadata, 'Author of the electronic edition').text = self.author_of_the_electronic_edition
+        if self.source_of_main_text: ET.SubElement(metadata, 'Source of main text').text = self.source_of_main_text
+        if self.location: ET.SubElement(metadata, 'Location').text = self.location
+        if self.date: ET.SubElement(metadata, 'Date').text = self.date
+        if self.sources_for_variant_readings:
+            ET.SubElement(metadata, 'Sources for variant readings').text = self.sources_for_variant_readings
+        if self.additional_details: ET.SubElement(metadata, 'Additional details').text = self.additional_details
+        if self.editor: ET.SubElement(metadata, 'Editor').text = self.editor
+        if self.email: ET.SubElement(metadata, 'Email').text = self.email
+
+        # add chapters
+        chapters = ET.SubElement(book, 'chapters')
+        for chapter in self.get_chapters():
+            chapters.append(chapter.export_to_XML())
+
+        # create a new XML file with the results
+        mydata = prettify(book)
+
+        return mydata
+
+    def download_XML(self):
+        """
+        Download the book in XML format.
+        """
+        xml = self.export_to_XML()
+        return Response(
+            xml,
+            mimetype="text/xml",
+            headers={"Content-disposition": "attachment; filename=book.xml"})
+
+    def __len__(self):
+        return self.length
+
+    def __repr__(self):
+        return f"{self.title}"
+
 
 class Chapters(PkModel):
     id = db.Column(db.Integer, primary_key=True)
@@ -156,6 +242,22 @@ class Chapters(PkModel):
     length = db.Column(db.Integer)
 
     paragraphs = db.relationship("Paragraphs", backref="chapters", lazy=True, cascade="all, delete")
+
+    def export_to_XML(self):
+        """
+        Export the chapter to XML format including all paragraphs
+        with their notes and tags.
+        """
+        # create the file structure
+        chapter = ET.Element('chapter')
+        chapter.set('index', str(self.index))
+
+        # add paragraphs
+        paragraphs = ET.SubElement(chapter, 'paragraphs')
+        for paragraph in self.paragraphs:
+            paragraphs.append(paragraph.export_to_XML())
+
+        return chapter
 
     def __init__(self, book_id, index):
         self.book_id = book_id
@@ -202,8 +304,30 @@ class Paragraphs(PkModel):
     def __len__(self):
         return self.length
 
-    def __repr__(self):
-        return f"Paragraph {self.index}"
+    def export_to_XML(self):
+        """
+        Export the paragraph to XML format including all notes
+        with their tags.
+        """
+        # create the file structure
+        paragraph = ET.Element('paragraph')
+        paragraph.set('index', str(self.index))
+        paragraph.set('text', self.text)
+        paragraph.set('greek', self.greek)
+
+        # add notes
+        notes = ET.SubElement(paragraph, 'notes')
+        for note in self.notes:
+            note_xml = note.export_to_XML()
+            if note_xml is not None:
+                notes.append(note_xml)
+
+        # add words
+        words = ET.SubElement(paragraph, 'words')
+        for word in self.words:
+            words.append(word.export_to_XML())
+
+        return paragraph
 
     def add_notes(self, text):
         for note_content in text.split("|"):
@@ -231,7 +355,8 @@ class Words(PkModel):
     arm = db.Column(db.String, unique=False)
     eng = db.Column(db.String, unique=False)
     paragraph_id = reference_col("paragraphs")
-    paragraph = db.relationship('Paragraphs', back_populates="words", lazy=True, cascade="all, delete")
+    paragraph = db.relationship('Paragraphs', back_populates="words", lazy=True, cascade="all, delete",
+                                overlaps="paragraphs")  # TODO: research overlaps error
 
     @classmethod
     def propose_word(cls, word):
@@ -252,6 +377,21 @@ class Words(PkModel):
         current_app.logger.info(scored_words)
         return scored_words[0][1]
 
+    def export_to_XML(self):
+        """
+        Export the word to XML format.
+        """
+        # create the file structure
+        word = ET.Element('word')
+        word.set('index', str(self.index))
+        word.set('content', self.content)
+        if self.lemma: word.set('lemma', self.lemma)
+        if self.gram: word.set('gram', self.gram)
+        if self.grc: word.set('grc', self.grc)
+        if self.arm: word.set('arm', self.arm)
+        if self.eng: word.set('eng', self.eng)
+        return word
+
     def __init__(self, index, content, paragraph_id):
         self.index = index
         self.content = content
@@ -268,6 +408,18 @@ class Notes(PkModel):
     text = db.Column(db.String, unique=False, default="")
     color = db.Column(db.String, unique=False, default="black")
     version = db.Column(db.String, unique=False, default=None)
+
+    def export_to_XML(self):
+        """
+        Export the note to XML including only text
+        """
+        if self.text :
+            # create the file structure
+            note = ET.Element('note')
+            note.set('text', self.text)
+            return note
+
+        return None
 
     def __init__(self, text, paragraph_id):
         self.paragraph_id = paragraph_id

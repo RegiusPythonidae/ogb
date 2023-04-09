@@ -1,0 +1,61 @@
+{% macro chapter_option(book_id, chapter_id) %}
+    {% if chapter_id == session.get('chapter_id')  %}
+        {% set selected = "selected" %}
+    {% else %}
+        {% set selected = "" %}
+    {% endif %}
+
+    <option {{ selected }} value="{{url_for('book.book_view',
+                                      book_id=book_id,
+                                      chapter_id=chapter_id)}}">{{ chapter_id }}</option>
+{% endmacro %}
+
+{% macro paragraph_option(book_id, paragraph_id, value) %}
+    {% if session.get('paragraph_id') %}
+        {% if paragraph_id == session.get('paragraph_id') %}
+            {% set selected = "selected" %}
+        {% else %}
+            {% set selected = "" %}
+        {% endif %}
+    {% endif %}
+    <option {{ selected }} value="{{url_for('book.book_view',
+                                      book_id=book_id,
+                                      chapter_id=session.get('chapter_id'),
+                                      paragraph_id=paragraph_id)}}">{{ value }}</option>
+{% endmacro %}
+
+{% macro selector_option(book_id, selector, value) %}
+{#    TODO: დავიმახსოვროთ რეზულტატი სესიაში#}
+    {% if session.get('selector') %}
+        {% if selector == session.get('selector') %}
+            {% set selected = "selected" %}
+        {% else %}
+            {% set selected = "" %}
+        {% endif %}
+    {% endif %}
+    <option {{ selected }} value="{{url_for('book.book_view',
+                                      book_id=book_id,
+                                      chapter_id=session.get('chapter_id'),
+                                      paragraph_id=session.get('paragraph_id'),
+                                      selector=selector)}}">{{ value }}</option>
+{% endmacro %}
+
+{% macro generate_paragraph(paragraph) %}
+    {% for word in paragraph.get_words %}
+        <span class="tooltip-info"
+              id="word-{{ word.id }}"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="lemma: {{word.lemma}} | gram: {{word.gram}} | grc: {{word.grc}}
+              | arm: {{word.arm}} | eng: {{word.eng}} |">{{ word.content }} </span>
+    {% endfor %}
+
+{% endmacro %}
+
+{% macro generate_list_of_books() %}
+        <ul class="list-item">
+            {% for book in Books.load(5) %}
+              <li><a href="{{ url_for('book.book_view', book_id=book.id) }}">{{ book.title }}</a></li>
+            {% endfor %}
+        </ul>
+{% endmacro %}

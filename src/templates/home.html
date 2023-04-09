@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %} თავფურცელი {% endblock %}
+
+{% block content %}
+    <main id="home">
+        <div class="container">
+            <div class="manuscript"></div>
+
+            <div class="manuscripts-list">
+                <h1>არსებული წიგნები</h1>
+                {{ generate_list_of_books() }}
+            </div>
+
+        </div>
+    </main>
+{% endblock %}

@@ -6,6 +6,8 @@ Most configuration is set via environment variables.
 For local development, use a .env file to set
 environment variables.
 """
+import logging
+
 from environs import Env
 
 env = Env()
@@ -23,11 +25,22 @@ class BaseConfig(object):
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    logging.basicConfig(level=logging.INFO)
 
-class DevelopmentConfig(BaseConfig):
+    DEBUG = False
+    TESTING = False
+
+
+class Development(BaseConfig):
     DEBUG = True
     ENV = env.str("FLASK_ENV", default="development")
     SQLALCHEMY_DATABASE_URI = env.str("DATABASE_URL")
+    logging.basicConfig(level=logging.DEBUG)
+
+
+class Testing(BaseConfig):
+    TESTING = True
+    DEBUG = True
 
 
 class ProductionConfig(BaseConfig):

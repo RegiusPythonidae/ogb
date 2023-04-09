@@ -1,8 +1,10 @@
+import logging
+
 import pytest
 
 from app import create_app
 
-URL = "/word_tags"
+URL = "/api/word_tags"
 
 
 @pytest.fixture
@@ -12,12 +14,13 @@ def client():
         yield client
 
 
-@pytest.mark.parametrize("palindrome", [
-    (0, True),
-    (1, True),
-    (202020202, False)
+@pytest.mark.parametrize("word_id, result", [
+    (0, 404),
+    (1, 200),
+    (202020202, 404)
 ])
 def test_word_get(client, word_id, result):
-    response = client.get(f"{URL}/{word_id}")
-    data = response.json
-    assert data == result
+    path = f"{URL}/{word_id}"
+    response = client.get(path)
+
+    assert response.status_code == result

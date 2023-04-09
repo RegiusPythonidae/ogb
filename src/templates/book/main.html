@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% from'book/macros.j2' import chapter_option, paragraph_option, selector_option, generate_paragraph with context %}
+
+{% block title %} {{ file.title }}{% endblock %}
+{% block content %}
+<main id="manuscript">
+    <div class="container-fluid" >
+        {#    headers #}
+        <div class="row" id="top-input-tools">
+            <div class="col-md-3">
+                <strong>{{ file.title }} ↓</strong>  <strong>{{ file.edition }} ↓</strong>
+            </div>
+            <div class="col-md-6">
+                <div class="row" >
+
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="inputChapter">თავი</label>
+                                <select id="inputChapter" class="form-control-sm" onChange="window.location.href=this.value">
+                                    {% for chapter in chapters %}
+                                        {{ chapter_option(file.id, chapter.index) }}
+                                    {% endfor %}
+                                </select>
+
+                            </div>
+                            <div class="col-md-6">
+                                <label for="inputParagraph">მუხლი</label>
+                                <select id="inputParagraph" class="form-control-sm" onChange="window.location.href=this.value">
+                                    {{ paragraph_option(file.id, None, '-') }}
+
+                                    {% for paragraph in paragraphs %}
+                                        {{ paragraph_option(file.id, paragraph.index, paragraph.index) }}
+                                    {% endfor %}
+                                </select>
+
+                            </div>
+
+                        </div >
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="inputParagraph">პარალელური</label>
+                        <select id="inputParagraph" class="form-control-sm" onChange="window.location.href=this.value">
+                            {{ selector_option(file.id, None, '-') }}
+
+                            {% for selector in selectors %}
+                                {{ selector_option(file.id, selector, selector) }}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+
+        </div>
+        <div class="row">
+            {#   მონაცემები #}
+            <div class="col-md-3">
+                {% if file.title %}<p><b>დასახელება:</b> {{ file.title }}</p>{% endif %}
+                {% if file.recension %}<p><b>რეცენზია: </b> {{ file.recension }}</p>{% endif %}
+                {% if file.publisher %}<p><b>გამომცემელი:</b> {{ file.publisher }}</p>{% endif %}
+                {% if file.publication_place %}<p><b>გამოცემის ადგილი:</b> {{ file.publication_place }} </p>{% endif %}
+                {% if file.publication_date %}<p><b>გამოცემის თარიღი:</b> {{ file.publication_date }} </p>{% endif %}
+                {% if file.author_of_the_electronic_edition %}<p><b>ელექტრონული გამოცემის ავტორი:</b> {{ file.author_of_the_electronic_edition }} </p>{% endif %}
+                {% if file.source_of_main_text %}<p><b>ძირითადი ტექსტის წყარო:</b> {{ file.source_of_main_text }} </p>{% endif %}
+                {% if file.location %}<p><b>ხელნაწერის შენახვის ადგილი:</b> {{ file.location }} </p>{% endif %}
+                {% if file.date %}<p><b>ხელნაწერის თარიღი:</b> {{ file.date }} </p>{% endif %}
+                {% if file.sources_for_variant_readings %}<p><b>ვარიანტული წაკითხვების წყაროები:</b> {{ file.sources_for_variant_readings }} </p>{% endif %}
+                {% if file.additional_details %}<p><b>დამატებითი ინფორმაცია:</b> {{ file.additional_details }} </p>{% endif %}
+                {% if file.editor %}<p><b>რედაქტორი:</b> {{ file.editor }} </p>{% endif %}
+                {% if file.email %}<p><b>ელ-ფოსტა:</b> {{ file.email }} </p>{% endif %}
+                {% if file.source %}<p><b>წყარო:</b> {{ file.source }} </p>{% endif %}
+
+                <p><a href="{{ url_for('books.edit_view', id=file.id) }}">✏️შეცვლა</a></p>
+                <p><a href="{{ url_for('book.download_book_XML', book_id=file.id) }}">📦XML-ის გადმოწერა</a></p>
+            </div>
+
+            {#        შუა #}
+            <div class="col-md-6">
+                <div class="row">
+
+                    <div class="col-md-6">
+                        {#            შუას ჰედერები #}
+                        <h1>საწყისი</h1>
+                    </div>
+                    <div class="col-md-6">
+                        <h1>პარალელული</h1>
+                    </div>
+                </div>
+                {#            შუას კონტენტი #}
+                {% for paragraph in paragraphs %}
+                    <div class="row"><strong>{{ paragraph.index }}</strong></div>
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="row">
+                                {#  იტერაცია თითოეულ პარაგრაფში#}
+
+                                <p>
+                                    {{ generate_paragraph(paragraph) }}
+                                </p>
+                                <p>
+                                    {% for note in paragraph.notes %}
+                                        <span style="color: {{ note.color }} ">{{ note}}</span>
+                                    {% endfor %}
+
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 font-Palatino">
+                            {% if session.get('selector') =="ბერძნული ტექსტი" %}
+                                {{ paragraph.greek }}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+            {#        მარცხენა #}
+            <div class="col-md-3">
+                <div class="container word-tagger">
+                    <div class="input-group input-group-sm tagger-input-group">
+                        <span class="input-group-text" id="word-title">Word</span>
+                        <input type="text" class="form-control" id="word-input" aria-describedby="word-title" readonly>
+                    </div>
+
+
+                    <div class="input-group input-group-sm tagger-input-group">
+                        <span class="input-group-text" id="lemma-title">Lemma</span>
+                        <input type="text" class="form-control" id="lemma-input" aria-describedby="lemma-title">
+                    </div>
+
+                    <div class="input-group input-group-sm tagger-input-group">
+                        <span class="input-group-text" id="gram-title">Gram</span>
+                        <input type="text" class="form-control" id="gram-input" aria-describedby="gram-title">
+                    </div>
+
+                    <div class="input-group input-group-sm tagger-input-group">
+                        <span class="input-group-text" id="grc-title">Grc</span>
+                        <input type="text" class="form-control" id="grc-input" aria-describedby="grc-title">
+                    </div>
+
+                    <div class="input-group input-group-sm tagger-input-group">
+                        <span class="input-group-text" id="arm-title">Arm</span>
+                        <input type="text" class="form-control" id="arm-input" aria-describedby="arm-title">
+                    </div>
+
+                    <div class="input-group input-group-sm tagger-input-group">
+                        <span class="input-group-text" id="eng-title">Eng</span>
+                        <input type="text" class="form-control" id="eng-input" aria-describedby="eng-title">
+                    </div>
+
+                    <div class="input-group input-group-sm tagger-input-group">
+                        <button type="submit" class="btn btn-primary mb-2" id="autofillFields">შევსება</button>
+                        <button type="submit" class="btn btn-danger mb-2" id="clearFields">გასუფთავება</button>
+                        <button type="submit" class="btn btn-success mb-2" id="submitFields">განახლება</button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="{{url_for("static", filename="js/tagging_word.js" )}}"></script>
+</main>
+{% endblock %}

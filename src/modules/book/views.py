@@ -30,7 +30,7 @@ def book_view(book_id=1, chapter_id=None, paragraph_id=None):
         paragraphs = [paragraphs[paragraph_id - 1]]
 
     return render_template(
-        "old_views/book.j2",
+        "book.html",
         file=book,
         chapters=book.get_chapters(),
         paragraphs=paragraphs,
@@ -38,3 +38,9 @@ def book_view(book_id=1, chapter_id=None, paragraph_id=None):
         # TODO: Implement real options model
         options=["ბერძნული ტექსტი", "გიორგის რეცენზია", "იენიში", "კომენტარი"],
     )
+
+
+@blueprint.route("/book/<int:book_id>/download", methods=["GET", "POST"])
+def download_book_XML(book_id):
+    book = Books.get_by_id(book_id)
+    return book.download_XML()

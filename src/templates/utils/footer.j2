@@ -1,0 +1,19 @@
+  <footer>
+    <div class="footer">
+      <div class="iliauni">
+        <img src="{{ url_for('static', filename='/img/iliauni-logo.svg') }}" alt="iliauni logo">
+      </div>
+      <div class="manuscripts-list-footer">
+        {{ generate_list_of_books() }}
+      </div>
+      <div class="left-side-footer">
+          <div>
+              <p>ლორემ იპსუმ ამხანაგობას აწმყოც მისულა პაპის იგულისხმონ, გიჩვენებდი მოტივით უნარიანი. ჩარჩო ვამართლებთ ხრიკებით, ჯოგის შედევრი თვალისმომჭღელ წლებს იბრიყვებს ჰავის საძნელო სკოლები.</p>
+          </div>
+      </div>
+    </div>
+
+    <div class="copyright">
+      © {{ get_current_year() }} ლინგვისტურ კვლევათა ინსტიტუტი
+    </div>
+  </footer>

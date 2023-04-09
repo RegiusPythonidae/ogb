@@ -51,8 +51,17 @@ class Model(CRUDMixin, db.Model):
     __abstract__ = True
 
     @classmethod
-    def load_all(cls):
-        return cls.query.all()
+    def load(cls, number_of_items: int | None = None) -> list:
+        """Get the books from database
+        :param number_of_items: number of books to get | default: None (all books)
+        """
+        if number_of_items is None:
+            return cls.query.all()
+        else:
+            return cls.query.limit(number_of_items).all()
+
+    def json(self):
+        return vars(self)
 
 
 class PkModel(Model):
@@ -65,10 +74,10 @@ class PkModel(Model):
     def get_by_id(cls: Type[T], record_id) -> Optional[T]:
         """Get record by ID."""
         if any(
-            (
-                isinstance(record_id, basestring) and record_id.isdigit(),
-                isinstance(record_id, (int, float)),
-            )
+                (
+                        isinstance(record_id, basestring) and record_id.isdigit(),
+                        isinstance(record_id, (int, float)),
+                )
         ):
             return cls.query.get(int(record_id))
         return None

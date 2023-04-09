@@ -47,15 +47,15 @@ class WordTags(Resource):
             return {'message': 'Word not found'}, 404
         args = self.parser.parse_args()
         word.update(**args)
-        current_app.logger.info(word.json())
-        return word.json()
+        current_app.logger.info(word)
+        return word
 
 
 @api.route('/similar/<string:word>')
 class SuggestWord(Resource):
     @api.marshal_with(model)
     def get(self, word):
-        word = Words.propose_word(word).json()
+        word = Words.propose_word(word)
         current_app.logger.info(word)
 
         if word is not None:
