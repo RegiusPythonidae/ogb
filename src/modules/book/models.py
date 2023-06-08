@@ -37,6 +37,7 @@ def prettify(book) -> str:
     #     if "&" in text:
     # TypeError: argument of type 'NoneType' is not iterable
 
+    ET.indent(book, space="\t", level=0)
     rough_string = ET.tostring(book, encoding='utf-8', method='xml')
     # reparsed = minidom.parseString(rough_string)
     # return reparsed.toprettyxml(indent="  ")
