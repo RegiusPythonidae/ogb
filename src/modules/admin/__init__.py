@@ -4,6 +4,7 @@ from src.modules.book.models import Books, Chapters, Notes, Paragraphs, File
 
 # Model Views
 from src.modules.admin.book_model_view import BookModelView
+from src.modules.admin.paragraph_model_view import ParagraphModelView
 
 # Flask-SQLAlchemy initialization here
 from src.extensions.database import db
@@ -31,3 +32,4 @@ admin = Admin(
 
 
 admin.add_view(BookModelView(Books, db.session, name="წიგნები"))
+admin.add_view(ParagraphModelView(Paragraphs, db.session, name="პარაგრაფები"))
