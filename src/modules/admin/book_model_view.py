@@ -23,9 +23,9 @@ class BookModelView(ModelView):
     # can_create = False
     column_display_pk = False
 
-    form_excluded_columns = ["chapters", "length"]
+    form_excluded_columns = ["chapters", "length", "edition", "email", "editor"]
 
-    column_list = ["title", "edition", "publisher", "publication_date"]
+    column_list = ["title", "publisher", "publication_date"]
     column_labels = {
         "title": "სახელი",
         "edition": "ვერსია",
