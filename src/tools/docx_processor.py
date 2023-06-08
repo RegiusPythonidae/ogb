@@ -39,4 +39,5 @@ def paragraph_section_to_text(paragraph_section) -> str:
 def split_paragraph_on_comma(text: str) -> (int, str):
     parts = text.split(".")
     if len(parts) > 1:
-        return int(parts[0]), text[len(parts):].strip()
+        num_length = len(str(parts[0])) + 1 # +1 to account for the period
+        return int(parts[0]), text[num_length:].strip()
