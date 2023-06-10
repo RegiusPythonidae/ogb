@@ -1,7 +1,7 @@
 # pull official base image
 FROM nickgryg/alpine-pandas
 
-MAINTAINER Temur Chichua "temur.chichua@iliauni.edu.ge"
+MAINTAINER Giorgi Kvaratskhelia "giorgi.kvaratskhelia@iliauni.edu.ge"
 
 # set work directory
 WORKDIR .

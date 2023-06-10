@@ -242,7 +242,7 @@ class Chapters(PkModel):
     index = db.Column(db.Integer)
     length = db.Column(db.Integer)
 
-    paragraphs = db.relationship("Paragraphs", backref="chapters", lazy=True, cascade="all, delete")
+    paragraphs = db.relationship("Paragraphs", backref="chapters", lazy=True, cascade="all, delete", order_by="Paragraphs.index")
 
     def export_to_XML(self):
         """
