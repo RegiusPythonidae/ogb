@@ -19,3 +19,9 @@ def index():
 def about():
     """Render the about page."""
     return render_template('about.html')
+
+    @blueprint.route('/method', method=["GET", "POST"])
+    @add_csp_header
+    def about():
+        """Render the method page."""
+        return render_template('method.html')
