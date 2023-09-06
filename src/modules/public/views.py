@@ -21,8 +21,8 @@ def about():
     return render_template('about.html')
 
 
-@blueprint.route('/method', method=["GET", "POST"])
+@blueprint.route('/methodology', method=["GET", "POST"])
 @add_csp_header
-def method():
-    """Render the method page."""
-    return render_template('method.html')
+def methodology():
+    """Render the methodology page."""
+    return render_template('methodology.html')
