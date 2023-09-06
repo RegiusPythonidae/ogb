@@ -68,7 +68,7 @@
                 {% if file.location %}<p><b>ხელნაწერის შენახვის ადგილი:</b> {{ file.location }} </p>{% endif %}
                 {% if file.date %}<p><b>ხელნაწერის თარიღი:</b> {{ file.date }} </p>{% endif %}
                 {% if file.sources_for_variant_readings %}<p><b>ვარიანტული წაკითხვების წყაროები:</b> {{ file.sources_for_variant_readings }} </p>{% endif %}
-                {% if file.additional_details %}<p><b>დამატებითი ინფორმაცია:</b> {{ file.additional_details }} </p>{% endif %}
+                {% if file.additional_details %}<p><b>დამატებითი ინფორმაცია:</b> {{ file.additional_details | safe }} </p>{% endif %}
                 {% if file.editor %}<p><b>რედაქტორი:</b> {{ file.editor }} </p>{% endif %}
                 {% if file.email %}<p><b>ელ-ფოსტა:</b> {{ file.email }} </p>{% endif %}
                 {% if file.source %}<p><b>წყარო:</b> {{ file.source }} </p>{% endif %}
