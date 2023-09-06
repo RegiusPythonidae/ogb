@@ -73,8 +73,8 @@
                 {% if file.email %}<p><b>ელ-ფოსტა:</b> {{ file.email }} </p>{% endif %}
                 {% if file.source %}<p><b>წყარო:</b> {{ file.source }} </p>{% endif %}
 
-                <p><a href="{{ url_for('books.edit_view', id=file.id) }}">✏️შეცვლა</a></p>
-                <p><a href="{{ url_for('book.download_book_XML', book_id=file.id) }}">📦XML-ის გადმოწერა</a></p>
+                <p><a href="{{ url_for('books.edit_view', id=file.id) }}">✏️ შეცვლა</a></p>
+                <p><a href="{{ url_for('book.download_book_XML', book_id=file.id) }}">📦 XML-ის გადმოწერა</a></p>
             </div>
 
             {#        შუა #}
@@ -83,10 +83,10 @@
 
                     <div class="col-md-6">
                         {#            შუას ჰედერები #}
-                        <h1>საწყისი</h1>
+                        <h1></h1>
                     </div>
                     <div class="col-md-6">
-                        <h1>პარალელური</h1>
+                        <h1></h1>
                     </div>
                 </div>
                 {#            შუას კონტენტი #}
