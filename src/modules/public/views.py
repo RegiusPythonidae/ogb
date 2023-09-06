@@ -22,6 +22,6 @@ def about():
 
     @blueprint.route('/method', method=["GET", "POST"])
     @add_csp_header
-    def about():
+    def method():
         """Render the method page."""
         return render_template('method.html')
