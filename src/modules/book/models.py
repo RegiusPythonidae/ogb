@@ -361,8 +361,11 @@ class Words(PkModel):
 
     @classmethod
     def propose_word(cls, word):
-        # words = cls.query.filter(cls.content.contains(word)).all()
         words = cls.query.filter_by(content=word).all()
+        if len(words) <= 1:
+            word = word.translate(str.maketrans("", "", "!?,.;:"))
+            words = cls.query.filter_by(content=word).all()
+
         scored_words = []
         for word in words:
             word_score = 0
