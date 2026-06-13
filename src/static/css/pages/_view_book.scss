@@ -1,0 +1,56 @@
+.word-details {
+  background-color: $secondary-custom-light;
+}
+
+.btn-close-details {
+  background-color: $muted;
+  color: $primary-custom;
+
+  &:hover {
+    background-color: $muted;
+    color: $primary-custom;
+    opacity: 70%;
+  }
+
+  &:active {
+    background-color: $muted !important;
+    color: $primary-custom !important;
+    opacity: 45%;
+    border: 1px solid transparent !important;
+  }
+}
+
+.paragraph-word {
+  cursor: pointer;
+
+  &.selected {
+    background-color: #eee0d1;
+    border-bottom: 2px solid #714233;
+    border-radius: 0.5rem;
+    padding: 0.15rem;
+  }
+}
+
+.is-untagged {
+  background-color: #FDE68A;
+  border-bottom: 2px solid #d77606;
+  border-radius: 0.5rem;
+  padding: 0.15rem;
+}
+
+.accordion-button {
+  &.hidden:after {
+    background-image: none;
+  }
+
+  &:after {
+    margin-left: 8px;
+  }
+}
+
+.tag-fixed {
+  background-color: #8afd8c;
+  border-bottom: 2px solid #06d737;
+  border-radius: 0.5rem;
+  padding: 0.15rem;
+}

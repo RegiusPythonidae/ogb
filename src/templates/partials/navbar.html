@@ -1,0 +1,25 @@
+<nav class="navbar navbar-expand-lg bg-primary-custom shadow border-accent border-bottom border-2">
+    <div class="container">
+        <a class="navbar-brand text-white" href="/">ძველი ქართული ბიბლია</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse " id="navbarContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/">მთავარი</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url_for('main.about') }}">პროექტის შესახებ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url_for('main.methodology') }}">მეთოდოლოგია</a>
+                </li>
+            </ul>
+            <div class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="საძიებო ტექსტი"/>
+                <button class="btn btn-outline-warning" type="submit">ძიება</button>
+            </div>
+        </div>
+    </div>
+</nav>

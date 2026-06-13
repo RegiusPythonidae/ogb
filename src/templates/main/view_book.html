@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+    {% if current_user.is_authenticated %}
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <div id="successToast" class="toast" role="alert">
+                <div class="toast-header">
+                    <strong class="me-auto">OGB API</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                </div>
+                <div class="toast-body">
+                    მონაცემები წარმატებით განახლდა
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row g-0">
+        <div class="col-2 sidebar pt-4 text-primary-dark-custom text-end">
+            <p class="px-3 py-2">
+                <b>სარჩევი</b>
+            </p>
+            {% for i in range(1, book.get_chapter_count()) %}
+                {% set isActive = "active-chapter" if paragraphs[0].chapter_number == i else "" %}
+                <div class="py-2 px-3 {{ isActive }}">
+                    <a href="{{ url_for('main.view_book', book_id=book.id, chapter_number=i) }}"
+                       class="text-decoration-none">
+                        თავი {{ i }}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="col">
+            <div class="row g-0">
+                {% set has_details = book.details != None %}
+                <div class="accordion accordion-flush" id="bookDetails">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            {% if has_details %}
+                                <button class="accordion-button collapsed bg-secondary-custom border-bottom border-primary-muted text-primary-dark-custom shadow-none"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#bookDetailsCollapsed">
+                                    <b>{{ book.title }}</b>
+                                </button>
+                            {% else %}
+                                <button class="accordion-button hidden bg-secondary-custom border-bottom border-primary-muted text-primary-dark-custom shadow-none">
+                                    <b>{{ book.title }}</b>
+                                </button>
+                            {% endif %}
+                        </h2>
+                        <div id="bookDetailsCollapsed" class="accordion-collapse collapse"
+                             data-bs-parent="#bookDetails">
+                            <div class="accordion-body border-bottom border-primary-muted bg-secondary-custom opacity-20">
+                                {{ book.additional_details | safe }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-0">
+                <div class="col p-4 ms-3">
+                    {% for paragraph in paragraphs %}
+                        <p><b>{{ paragraph.index }}. </b>
+                            {% for word in paragraph.text.split() %}
+                                {% set word_details = paragraph.words[loop.index0] %}
+                                {% set untaggedClass = "is-untagged" if word_details.is_untagged() and current_user.is_authenticated else "" %}
+                                <span class="paragraph-word {{ untaggedClass }}"
+                                      data-id="{{ word_details.id }}"
+                                      data-text="{{ word_details.text }}"
+                                      data-lemma="{{ word_details.lemma }}"
+                                      data-grammar="{{ word_details.grammar }}"
+                                      data-greek="{{ word_details.greek_text }}"
+                                      data-english="{{ word_details.english_text }}"
+                                      data-armenian="{{ word_details.armenian_text }}">
+                            {{ word }}
+                        </span>
+                            {% endfor %}
+                        </p>
+                    {% endfor %}
+                </div>
+                <div class="col px-4 py-2 ms-3 border-start border-white border-primary-muted">
+
+                    {% for paragraph in paragraphs %}
+                        <p><b class="text-primary-dark-custom">{{ paragraph.index }}. </b>{{ paragraph.greek_text }}
+                        </p>
+                    {% endfor %}
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-2 border-start border-primary-muted border-3 word-details d-none">
+            <div class="sticky-top">
+                <div class="px-3 py-4 d-flex align-items-start justify-content-between border-bottom border-primary-muted">
+                    <div>
+                        <h5>სიტყვის დეტალები</h5>
+                        <span id="selectedWord">სიტყვა</span>
+                    </div>
+                    <button class="btn px-2 py-1 btn-close-details" id="closeDetailsBtn">
+                        {{ utils.load_svg("crossmark.svg", 16, 16) | safe }}
+                    </button>
+                </div>
+
+                <div class="px-3 mt-2">
+                    <label for="lemma" class="text-primary-custom">
+                        {{ utils.load_svg("book.svg", 11, 11) | safe }}
+                        ლემა
+                    </label>
+                    <input class="form-control-custom mt-1 mb-3" name="lemma" id="lemma">
+
+                    <label for="grammarTags" class="text-primary-custom">
+                        {{ utils.load_svg("tag.svg", 11, 11) | safe }}
+                        გრამატიკული თეგები
+                    </label>
+                    <input class="form-control-custom mt-1 mb-3" name="grammarTags" id="grammarTags">
+
+                    <label for="greekText" class="text-primary-custom">
+                        {{ utils.load_svg("translate.svg", 11, 11) | safe }}
+                        ბერძნული თარგმანი
+                    </label>
+                    <input class="form-control-custom mt-1 mb-3" name="greekText" id="greekText">
+
+                    <label for="armenianText" class="text-primary-custom">
+                        {{ utils.load_svg("translate.svg", 11, 11) | safe }}
+                        სომხური თარგმანი
+                    </label>
+                    <input class="form-control-custom mt-1 mb-3" name="armenianText" id="armenianText">
+
+                    <label for="georgianText" class="text-primary-custom">
+                        {{ utils.load_svg("translate.svg", 11, 11) | safe }}
+                        ინგლისური თარგმანი
+                    </label>
+                    <input class="form-control-custom mt-1 mb-3" name="georgianText" id="georgianText">
+
+                    {% if current_user.is_authenticated %}
+                        <button type="submit" id="autoFill" name="autoFill"
+                                class="btn btn-primary-custom">
+                            შევსება
+                        </button>
+                        <button type="submit" id="save" name="save"
+                                class="btn btn-primary-custom">
+                            შენახვა
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="/static/js/inspect_word.js"></script>
+    {% if current_user.is_authenticated %}
+        <script src="/static/js/word_tagger.js"></script>
+    {% endif %}
+{% endblock %}

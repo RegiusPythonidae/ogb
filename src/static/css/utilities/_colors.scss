@@ -1,0 +1,42 @@
+$primary-custom: #6a3a2a;
+$primary-custom-dark: #2c1810;
+
+$primary-custom-border: #6b3a2a26;
+
+$secondary-custom: #f8f3ea;
+$secondary-custom-light: #fbf6f0;
+
+$sidebar-background: #eee2ce;
+$sidebar-foreground: #e6d3b6;
+$sidebar-accent: #c6946b;
+
+$navbar-accent: #c8956c;
+
+
+$muted: #ede0cc;
+$muted-foreground: #7a5c48;
+
+
+$theme-colors: (
+        "primary-custom": $primary-custom,
+        "primary-dark-custom": $primary-custom-dark,
+        "secondary-custom": $secondary-custom,
+        "secondary-custom-light": $secondary-custom-light,
+);
+
+@each $name, $color in $theme-colors {
+  .bg-#{$name} {
+    background-color: $color !important;
+  }
+
+  .text-#{$name} {
+    color: $color !important;
+  }
+
+  .table-#{$name} {
+    td, th {
+      background-color: $color;
+      border: 1px solid $muted;
+    }
+  }
+}

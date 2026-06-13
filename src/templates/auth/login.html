@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+        <div class="row justify-content-center g-0 min-vh-100">
+            <div class="col-3 align-items-center my-auto">
+                <div class="text-center mb-4">
+                    <div class="d-inline-flex align-items-center mb-3" style="gap: 1rem">
+                        <div class="icon-container bg-primary-gradient shadow-lg text-white">
+
+                        </div>
+                        <div class="text-left">
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="bg-secondary-custom-light rounded-4 shadow p-4 p-md-5 border border-primary-muted">
+                    <h2 class="h3 text-heading text-center mb-4">
+                        ავტორიზაცია
+                    </h2>
+
+                    <form method="post">
+                        {{ form.hidden_tag() }}
+                        {{ form.email(class="form-control-custom mb-3 shadow-sm", placeholder="შეიყვანე მეილი") }}
+                        {{ form.password(class="form-control-custom mb-3 shadow-sm", placeholder="შეიყვანე პაროლი") }}
+
+                        <button type="submit" id="submit" name="submit"
+                                class="btn btn-lg gap-2 btn-primary-custom btn-block shadow d-flex align-items-center justify-content-center">
+                            {{ utils.load_svg("login.svg") | safe }}
+                            შესვლა
+                        </button>
+                    </form>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="/" class="text-primary-custom text-decoration-none">
+                        ← საიტზე დაბრუნება
+                    </a>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}

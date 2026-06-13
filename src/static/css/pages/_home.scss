@@ -1,0 +1,105 @@
+.book {
+    border-radius: 0.25em;
+    position: relative;
+    margin: 1em;
+
+    background: #EBEBEB url(//s.ytimg.com/yt/imgbin/www-refreshbg-vflC3wnbM.png) repeat 0 0;
+}
+
+.book > header, .book > footer {
+    z-index: 1;
+}
+
+.book::before {
+    background-color: $primary-custom;
+    bottom: -1em;
+    content: '';
+    left: -1em;
+    position: absolute;
+    right: -1em;
+    top: -1em;
+    z-index: -1;
+}
+
+.book::after {
+    background: linear-gradient(to right, transparent 0%,
+    rgba(0, 0, 0, 0.2) 46%,
+    rgba(0, 0, 0, 0.5) 49%,
+    rgba(0, 0, 0, 0.6) 50%,
+    rgba(0, 0, 0, 0.5) 51%,
+    rgba(0, 0, 0, 0.2) 52%, transparent 100%);
+
+    bottom: -0.45vw;
+    top: -0.45vw;
+    content: '';
+    left: 50%;
+    position: absolute;
+
+    transform: translate(-50%, 0);
+    width: 4em;
+    z-index: 1;
+}
+
+
+.book > header::before, .book > header::after,
+.book > footer::before, .book > footer::after {
+    background: #EBEBEB url(//s.ytimg.com/yt/imgbin/www-refreshbg-vflC3wnbM.png) repeat 0 0;
+    border-radius: 25%;
+    content: '';
+    height: 2em;
+    position: absolute;
+    z-index: -1;
+    width: calc(45% + 2em);
+}
+
+
+.book > header::before {
+    border-top-right-radius: 25%;
+    right: 50%;
+    transform: rotate(-2deg);
+
+}
+
+.book > header::after {
+    border-top-left-radius: 25%;
+    left: 50%;
+    transform: rotate(2deg);
+
+}
+
+.book > footer::after {
+    border-bottom-left-radius: 25%;
+    left: 50%;
+    bottom: -0.05em;
+    transform: rotate(-2deg);
+}
+
+.book > footer::before {
+    border-bottom-right-radius: 25%;
+    right: 50%;
+    bottom: -0.05em;
+    transform: rotate(2deg);
+}
+
+hr.custom-divider {
+    overflow: visible;
+    padding: 0;
+    border: none;
+    border-top: 6px double #9e9e9e;
+    color: #9e9e9e !important;
+    text-align: center;
+}
+
+hr.custom-divider:after {
+    content: "✠";
+    display: inline-block;
+    position: relative;
+    top: -0.8em;
+    font-size: 1.5em;
+    padding: 0 0.25em;
+    background: #EBEBEB;
+}
+
+.text-shadow {
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+}

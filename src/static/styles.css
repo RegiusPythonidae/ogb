@@ -1,0 +1,76 @@
+html, body {
+    height: 100% !important;
+}
+
+.bg-primary-custom {
+    background-color: #87441c
+}
+
+.book {
+    background: #EBEBEB url(//s.ytimg.com/yt/imgbin/www-refreshbg-vflC3wnbM.png) repeat 0 0;
+}
+
+.book::after {
+    background: linear-gradient(to right, transparent 0%,
+    rgba(0, 0, 0, 0.2) 46%,
+    rgba(0, 0, 0, 0.5) 49%,
+    rgba(0, 0, 0, 0.6) 50%,
+    rgba(0, 0, 0, 0.5) 51%,
+    rgba(0, 0, 0, 0.2) 52%, transparent 100%);
+
+    bottom: 0.9em;
+    top: 0.9em;
+    content: '';
+    left: 50%;
+    position: absolute;
+
+    transform: translate(-50%, 0);
+    width: 4em;
+    z-index: 1;
+}
+
+
+.book > header::before, .book > header::after,
+.book > footer::before, .book > footer::after {
+    background: #EBEBEB url(//s.ytimg.com/yt/imgbin/www-refreshbg-vflC3wnbM.png) repeat 0 0;
+    display: block;
+    position: absolute;
+    content: '';
+
+    width: calc(50% - 1em);
+    height: 2em;
+        z-index: 1;
+}
+
+.book > header::before {
+    border-top-right-radius: 25%;
+    rotate: -2deg;
+}
+
+.book > header::after {
+    border-top-left-radius: 25%;
+    rotate: 2deg;
+    left: 50%;
+    top: 1.5em;
+}
+
+.book > footer::after {
+    border-bottom-left-radius: 25%;
+    rotate: -2deg;
+    bottom: 1.5em;
+    left: 50%;
+}
+
+.book > footer::before {
+    border-bottom-right-radius: 25%;
+    rotate: 2deg;
+    bottom: 1.5em;
+}
+
+.book > header span,
+.book > footer span {
+    position: relative;
+    z-index: 2;
+}
+
+

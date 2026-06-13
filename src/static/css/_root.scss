@@ -1,0 +1,13 @@
+*, :before, :after {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 99% !important;
+    font-family: "Google Sans", Helvetica, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
