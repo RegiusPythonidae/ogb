@@ -11,8 +11,8 @@ class Paragraph(BaseModel):
     index = db.Column(db.Integer, nullable=False)
     chapter_number = db.Column(db.Integer, nullable=False)
 
-    text = db.Column(db.Text, nullable=False)
-    greek_text = db.Column(db.Text, nullable=False)
+    text = db.Column(db.String, nullable=False)
+    greek_text = db.Column(db.String, nullable=False)
 
     book = db.relationship('Book', back_populates='paragraphs', lazy=True, uselist=False)
     words = db.relationship('Word', back_populates='paragraph', lazy=True, order_by='Word.position')
