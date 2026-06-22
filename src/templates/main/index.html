@@ -11,7 +11,7 @@
 
             <div class="d-flex flex-column px-5 w-50" style="z-index: 1">
                 {%- for book in books -%}
-                    <div data-aos="fade-up" data-aos-delay="{{ 100 + (50 * loop.index) }}">
+                    <div data-aos="fade-up" data-aos-delay="{{ 100 + (50 * loop.index) }}" class="mt-2">
                         <a href="{{ url_for('main.view_book', book_id=book.id) }}"
                            class="d-flex p-3 align-items-center justify-content-between bg-secondary-custom rounded border border-2 border-accent hover-shadow">
                             <div class="d-flex align-items-center">
