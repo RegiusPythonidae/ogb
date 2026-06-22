@@ -1,4 +1,5 @@
 from string import punctuation as default_punctuation
+import unicodedata
 from os import path
 import re
 
@@ -18,6 +19,16 @@ def remove_trailing_spaces(text):
         text = text.replace('  ', ' ')
 
     return text
+
+
+
+def is_punctuation_token(text):
+    text = text.strip()
+
+    if not text:
+        return True
+
+    return all(unicodedata.category(ch).startswith("P") for ch in text)
 
 def load_svg(name, width=None, height=None, css_class=None):
     if '..' in name or name.startswith('/'):

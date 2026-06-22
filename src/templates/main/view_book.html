@@ -63,20 +63,29 @@
             <div class="row g-0">
                 <div class="col p-4 ms-3">
                     {% for paragraph in paragraphs %}
-                        <p><b>{{ paragraph.index }}. </b>
+                        <p><b>{{ paragraph.index }}.</b>
+                            {% set ns = namespace(loop_index=-1) %}
                             {% for word in paragraph.text.split() %}
-                                {% set word_details = paragraph.words[loop.index0] %}
-                                {% set untaggedClass = "is-untagged" if word_details.is_untagged() and current_user.is_authenticated else "" %}
-                                <span class="paragraph-word {{ untaggedClass }}"
-                                      data-id="{{ word_details.id }}"
-                                      data-text="{{ word_details.text }}"
-                                      data-lemma="{{ word_details.lemma }}"
-                                      data-grammar="{{ word_details.grammar }}"
-                                      data-greek="{{ word_details.greek_text }}"
-                                      data-english="{{ word_details.english_text }}"
-                                      data-armenian="{{ word_details.armenian_text }}">
-                            {{ word }}
-                        </span>
+                                {% set is_punctuation = utils.is_punctuation_token(word) %}
+                                {% if not is_punctuation %}
+                                    {% set ns.loop_index = ns.loop_index + 1 %}
+                                    {% set word_details = paragraph.words[ns.loop_index] %}
+                                    {% set untaggedClass = "is-untagged" if word_details.is_untagged() and current_user.is_authenticated else "" %}
+                                    <span class="paragraph-word {{ untaggedClass }}"
+                                          data-id="{{ word_details.id }}"
+                                          data-text="{{ word_details.text }}"
+                                          data-lemma="{{ word_details.lemma }}"
+                                          data-grammar="{{ word_details.grammar }}"
+                                          data-greek="{{ word_details.greek_text }}"
+                                          data-english="{{ word_details.english_text }}"
+                                          data-armenian="{{ word_details.armenian_text }}">
+                                        {{ word }}
+                                    </span>
+                                {% else %}
+                                    <span>
+                                        {{ word }}
+                                    </span>
+                                {% endif %}
                             {% endfor %}
                         </p>
                     {% endfor %}

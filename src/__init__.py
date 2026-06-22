@@ -8,8 +8,7 @@ from src.commands import initialize_db, populate_db, import_xml
 from src.models import User, Book, Paragraph
 from src.views import main_bp, auth_bp
 from src.admin_views import admin, BookView, ParagraphView
-from src.utils import load_svg
-
+from src.utils import load_svg, is_punctuation_token
 
 COMMANDS = [
     initialize_db,
@@ -27,7 +26,7 @@ def create_app():
 
     app = Flask(__name__)
     app.config.from_object(Config)
-    app.jinja_env.globals['utils'] = {'load_svg': load_svg}
+    app.jinja_env.globals['utils'] = {'load_svg': load_svg, 'is_punctuation_token': is_punctuation_token}
 
     initialize_extensions(app)
     register_blueprints(app)

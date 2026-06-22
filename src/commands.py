@@ -4,7 +4,8 @@ import xml.etree.ElementTree as ET
 
 from src.ext import db
 from src.models import User, Book, Paragraph, Word, Note
-from src.utils import remove_punctuation
+from src.utils import remove_punctuation, is_punctuation_token
+
 
 @click.command('init_db')
 @with_appcontext
@@ -29,9 +30,10 @@ def populate_db():
 
 
 @click.command('import_xml')
+@click.argument("filename")
 @with_appcontext
-def import_xml():
-    tree = ET.parse("Matthew.xml")
+def import_xml(filename):
+    tree = ET.parse(filename)
     xml_tree = tree.getroot()
     for node in xml_tree:
         if node.tag == "metadata":
@@ -67,6 +69,9 @@ def import_xml():
                                 for word_node in child:
                                     index = word_node.attrib.get("index").strip()
                                     content = remove_punctuation(word_node.attrib.get("content")).strip()
+
+                                    if is_punctuation_token(content):
+                                        continue
 
                                     lemma = word_node.attrib.get("lemma")
                                     if lemma: lemma = lemma.strip()

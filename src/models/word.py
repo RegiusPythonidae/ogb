@@ -8,14 +8,14 @@ class Word(BaseModel):
     id = db.Column(db.Integer, primary_key=True)
     paragraph_id = db.Column(db.Integer, db.ForeignKey('paragraphs.id'), nullable=False)
 
-    text = db.Column(db.String(32), nullable=False)
-    greek_text = db.Column(db.String(32), nullable=True)
-    armenian_text = db.Column(db.String(32), nullable=True)
-    english_text = db.Column(db.String(32), nullable=True)
+    text = db.Column(db.String(64), nullable=False)
+    greek_text = db.Column(db.String(256), nullable=True)
+    armenian_text = db.Column(db.String(256), nullable=True)
+    english_text = db.Column(db.String(256), nullable=True)
 
     position = db.Column(db.Integer, nullable=False)
-    lemma = db.Column(db.String(32), nullable=True)
-    grammar = db.Column(db.String(128), nullable=True)
+    lemma = db.Column(db.String(256), nullable=True)
+    grammar = db.Column(db.String(256), nullable=True)
 
     paragraph = db.relationship('Paragraph', back_populates='words', lazy=True, uselist=False)
 
