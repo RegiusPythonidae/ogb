@@ -2,21 +2,32 @@
 
 {% block body %}
 
-    <div class="container h-100 d-flex align-items-center justify-content-center">
-        <div class="row text-center g-0" >
+    <div class="container h-100">
+        <div class="row text-center g-0 justify-content-center mt-5">
             <h1 data-aos="fade-up"
-                class="px-3 pt-3 pb-5">
+                class="px-3 pb-5">
                 ანოტირებული წიგნები
             </h1>
 
-            <div class="d-flex flex-column px-5 text-center">
+            <div class="d-flex flex-column px-5 w-50" style="z-index: 1">
                 {%- for book in books -%}
-                    <a href="{{ url_for('main.view_book', book_id=book.id) }}"
-                       class="text-decoration-none text-dark fs-4 hover-scale"
-                       data-aos="fade-up"
-                       data-aos-delay={{ 100 + (50 * loop.index) }}>
-                        {{ book.title }}
-                    </a>
+                    <div data-aos="fade-up" data-aos-delay="{{ 100 + (50 * loop.index) }}">
+                        <a href="{{ url_for('main.view_book', book_id=book.id) }}"
+                           class="d-flex p-3 align-items-center justify-content-between bg-secondary-custom rounded border border-2 border-accent hover-shadow">
+                            <div class="d-flex align-items-center">
+                                <div class="text-secondary-custom p-2 bg-primary-custom rounded-2">
+                                    {{ utils.load_svg("book.svg", 32, 32) | safe }}
+                                </div>
+                                <span class="ms-2" style="font-size: 18px">
+                                    {{ book.title }}
+                                </span>
+                            </div>
+                            <span style="background-color: #e8d5b7; color: #4a2315; font-size: 0.8rem"
+                                  class="rounded-pill px-3 py-1">
+                                {{ book.paragraphs | groupby("chapter_number") | length }} თავი
+                            </span>
+                        </a>
+                    </div>
                 {% endfor %}
             </div>
         </div>

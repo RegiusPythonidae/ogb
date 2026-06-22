@@ -77,6 +77,14 @@ a {
   transform: scale(1.2) !important;
 }
 
+.hover-shadow {
+  transition: box-shadow 0.25s;
+}
+
+.hover-shadow:hover {
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+}
+
 .border-accent {
   border-color: #c6946b !important;
 }
