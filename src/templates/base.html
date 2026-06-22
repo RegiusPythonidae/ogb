@@ -12,31 +12,30 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="/static/css/styles.css" rel="stylesheet"/>
 </head>
-<body class="bg-secondary-custom">
+<body class="d-flex flex-column min-vh-100 bg-secondary-custom">
 
 {% set is_landing_page = request.endpoint == "main.index" %}
 {% if is_landing_page %}
-    {% set class_name = "container-fluid p-0 h-100 " %}
+    {% set class_name = "container-fluid p-0 flex-grow-1 landing-background" %}
 {% else %}
-    {% set class_name = "" %}
+    {% set class_name = "flex-grow-1" %}
 {% endif %}
 
-{% if not is_landing_page %}
-    {% include "partials/navbar.html" %}
-{% endif %}
+
+{% include "partials/navbar.html" %}
 
 <div class="{{ class_name }}">
     {% block body %}
     {% endblock %}
 </div>
 
-{% if not is_landing_page %}
-    {% include "partials/footer.html" %}
-{% endif %}
+{% include "partials/footer.html" %}
 
 
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
 <script>
     AOS.init();
 </script>

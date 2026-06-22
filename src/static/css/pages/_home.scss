@@ -1,3 +1,20 @@
+.landing-background {
+  position: relative;
+    background-image: url('/static/img/home.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.landing-background::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba($secondary-custom, 0.65);
+    z-index: 0;
+}
+
 .book {
     border-radius: 0.25em;
     position: relative;

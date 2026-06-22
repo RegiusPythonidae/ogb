@@ -2,88 +2,24 @@
 
 {% block body %}
 
-    <div class="book" style="height: 98.7%;">
-        <header></header>
+    <div class="container h-100 d-flex align-items-center justify-content-center">
+        <div class="row text-center g-0" >
+            <h1 data-aos="fade-up"
+                class="px-3 pt-3 pb-5">
+                ანოტირებული წიგნები
+            </h1>
 
-        <div class="row py-5 px-3 h-100" style="overflow: clip">
-            <div class="col d-flex flex-column justify-content-between" style="transform: skewY(-0.5deg)">
-                <div class="row text-center px-5">
-                    <h1 data-aos="fade-up"
-                        class="px-3 pt-3 pb-5 text-shadow ff-archium">
-                        ძველი ქართული ბიბლია
-                    </h1>
-
-                    <hr data-aos="zoom-in" data-aos-duration="500" class="custom-divider"/>
-
-                    <a href="{{ url_for('main.about') }}" class="text-decoration-none text-dark fs-5 mt-3 text-shadow hover-scale ff-archium"
+            <div class="d-flex flex-column px-5 text-center">
+                {%- for book in books -%}
+                    <a href="{{ url_for('main.view_book', book_id=book.id) }}"
+                       class="text-decoration-none text-dark fs-4 hover-scale"
                        data-aos="fade-up"
-                       data-aos-delay="100">
-                        პროექტის შესახებ
+                       data-aos-delay={{ 100 + (50 * loop.index) }}>
+                        {{ book.title }}
                     </a>
-
-                    <a href="{{ url_for('main.methodology') }}" class="text-decoration-none text-dark fs-5 mt-3 text-shadow hover-scale ff-archium"
-                       data-aos="fade-up"
-                       data-aos-delay="150">
-                        მეთოდოლოგია
-                    </a>
-                </div>
-
-                <div class="row py-1 px-5">
-                    <hr data-aos="zoom-in" data-aos-duration="800" class="text-secondary"/>
-                    <div class="col-4 text-dark">
-                        <a href="https://iliauni.edu.ge/ge" target="_blank">
-                            <img src="{{ url_for('static', filename='img/iliauni-logo.svg') }}"
-                                 height="64"
-                                 data-aos="fade-up"
-                                 class="hover-scale"
-                                 alt="Ilia State University"/>
-                        </a>
-                    </div>
-                    <div class="col-4">
-                        <a href="https://rustaveli.org.ge" target="_blank">
-                            <img src="{{ url_for('static', filename='img/rustaveli-foundation-logo.png') }}"
-                                 height="64"
-                                 data-aos="fade-up"
-                                 data-aos-delay="150"
-                                 class="hover-scale"
-                                 alt="Shota Rustaveli Foundation"/>
-                        </a>
-                    </div>
-                    <div class="col align-self-center" data-aos="fade-up" data-aos-delay="300">
-                        <span>© 2026 ლინგვისტურ კვლევათა ინსტიტუტი</span>
-                    </div>
-                </div>
-
-            </div>
-            <div class="col d-flex flex-column justify-content-between" style="transform: skewY(0.5deg)">
-                <div class="row px-5 text-center">
-                    <h1 data-aos="fade-up"
-                        class="px-3 pt-3 pb-5 text-shadow ff-archium">
-                        ანოტირებული წიგნები
-                    </h1>
-
-                    <hr data-aos="zoom-in" data-aos-duration="500" class="custom-divider"/>
-
-                    {%- for book in books -%}
-                        <a href="{{ url_for('main.view_book', book_id=book.id) }}"
-                           class="text-decoration-none text-dark fs-4 mt-3 text-shadow hover-scale ff-archium"
-                           data-aos="fade-up"
-                           data-aos-delay={{ 100 + (50 * loop.index) }}>
-                            {{ book.title }}
-                        </a>
-                    {% endfor %}
-                </div>
-
-                <div class="row px-5">
-                    <hr data-aos="zoom-in" data-aos-duration="500" class="text-secondary"/>
-                    <div class="col" data-aos="fade-up" data-aos-delay="450">
-                        <span>Პორტალი შეიქმნა ბიბლიის ძველი ქართული თარგმანების მორფოლოგიური ანოტირების მიზნით პროექტის „გიორგი მთაწმინდელის რეცენზიის მათეს სახარების პარალელური ელექტრონული გამოცემა“ (YS-21-1562) ფარგლებში.</span>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
-
-        <footer></footer>
     </div>
 
 {% endblock %}
