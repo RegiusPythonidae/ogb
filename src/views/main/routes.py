@@ -1,4 +1,9 @@
-from flask import Blueprint, render_template, request
+from collections import defaultdict
+from io import BytesIO
+from xml.etree.ElementTree import Element, SubElement, tostring
+from xml.dom import minidom
+
+from flask import Blueprint, render_template, request, send_file
 from flask_login import current_user
 from sqlalchemy import or_
 
@@ -24,6 +29,63 @@ def view_book(book_id=1, chapter_number=1, paragraph_index=None):
 
     paragraphs = paragraphs.order_by(Paragraph.index).all()
     return render_template("main/view_book.html", book=book, paragraphs=paragraphs)
+
+@main_bp.route("/export_xml/<int:book_id>")
+def export_xml(book_id):
+    book = Book.query.get(book_id)
+
+    root = Element("book")
+    metadata = SubElement(root, "metadata")
+    title = SubElement(metadata, "Title")
+    title.text = book.title
+
+    details = SubElement(metadata, "Details")
+    details.text = book.additional_details or ""
+
+    chapters_el = SubElement(root, "chapters")
+    chapters = defaultdict(list)
+
+    for paragraph in sorted(book.paragraphs, key=lambda p: (p.chapter_number, p.index)):
+        chapters[paragraph.chapter_number].append(paragraph)
+
+    for chapter_number, paragraphs in sorted(chapters.items()):
+        chapter_el = SubElement(chapters_el,"chapter",{"index": str(chapter_number)})
+        paragraphs_el = SubElement(chapter_el, "paragraphs")
+
+        for paragraph in paragraphs:
+            paragraph_el = SubElement(
+                paragraphs_el,"paragraph",{
+                    "index": str(paragraph.index),
+                    "text": paragraph.text,
+                    "greek": paragraph.greek_text,
+                },
+            )
+
+            notes_el = SubElement(paragraph_el, "notes")
+            for note in paragraph.notes:
+                note_attrs = {"text": note.text}
+                if note.color: note_attrs["color"] = note.color
+                SubElement(notes_el, "note", note_attrs)
+
+            words_el = SubElement(paragraph_el, "words")
+
+            for word in sorted(paragraph.words, key=lambda w: w.position):
+                SubElement(words_el,"word",{
+                        "index": str(word.position),
+                        "content": word.text or "",
+                        "lemma": word.lemma or "",
+                        "gram": word.grammar or "",
+                        "grc": word.greek_text or "",
+                        "arm": word.armenian_text or "",
+                        "eng": word.english_text or "",
+                    },
+                )
+
+
+    xml_bytes = minidom.parseString(tostring(root, encoding="utf-8")).toprettyxml(indent="\t", encoding="utf-8")
+    xml_string = xml_bytes.decode("utf-8")
+    buffer = BytesIO(xml_string.encode("utf-8"))
+    return send_file(buffer, mimetype="application/xml", as_attachment=True, download_name=f"{book.title}.xml")
 
 @main_bp.route('/word/<int:word_id>', methods=['GET', 'POST'])
 def tagger(word_id):

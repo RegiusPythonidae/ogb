@@ -55,6 +55,13 @@
                              data-bs-parent="#bookDetails">
                             <div class="accordion-body border-bottom border-primary-muted bg-secondary-custom opacity-20">
                                 {{ book.additional_details | safe }}
+                                <br><br>
+
+                                <a href="{{ url_for('main.export_xml', book_id=book.id) }}"
+                                   class="btn btn-primary-custom">
+                                    გადმოწერა
+                                </a>
+
                             </div>
                         </div>
                     </div>
