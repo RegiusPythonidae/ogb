@@ -1,3 +1,5 @@
+{% from "macros.html" import is_active %}
+
 <nav class="navbar navbar-expand-lg bg-primary-custom shadow border-accent border-bottom border-2">
     <div class="container">
         <a class="navbar-brand text-white" href="/">ძველი ქართული ბიბლია</a>
@@ -7,13 +9,19 @@
         <div class="collapse navbar-collapse " id="navbarContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="/">მთავარი</a>
+                    <a class="nav-link text-white {{ is_active('main.index') }} {{ is_active('main.view_book') }}" href="/">
+                        მთავარი
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ url_for('main.about') }}">პროექტის შესახებ</a>
+                    <a class="nav-link text-white {{ is_active('main.about') }}" href="{{ url_for('main.about') }}">
+                        პროექტის შესახებ
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ url_for('main.methodology') }}">მეთოდოლოგია</a>
+                    <a class="nav-link text-white {{ is_active('main.methodology') }}" href="{{ url_for('main.methodology') }}">
+                        მეთოდოლოგია
+                    </a>
                 </li>
             </ul>
             <div class="d-flex" role="search">

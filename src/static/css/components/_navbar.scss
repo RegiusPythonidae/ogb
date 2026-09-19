@@ -1,0 +1,32 @@
+.nav-link {
+  position: relative;
+  transition: all 0.3s ease;
+  padding-bottom: 0.5rem !important;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: $sidebar-accent;
+    transition: width 0.3s ease;
+  }
+
+  &:hover {
+    &::after {
+      width: 100%;
+    }
+  }
+
+  &.active {
+    font-weight: 600;
+    background-color: rgba($sidebar-accent, 0.15);
+    border-radius: 0.25rem;
+
+    &::after {
+      width: 100%;
+    }
+  }
+}
