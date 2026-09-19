@@ -11,6 +11,7 @@ class User(BaseModel, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), nullable=False)
     _password = db.Column(db.String(255), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return self.username

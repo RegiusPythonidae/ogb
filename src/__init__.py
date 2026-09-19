@@ -3,11 +3,11 @@ from werkzeug import serving
 
 
 from src.config import Config
-from src.ext import db, login_manager, ckeditor
+from src.ext import db, login_manager, ckeditor, migrate
 from src.commands import initialize_db, populate_db, import_xml
 from src.models import User, Book, Paragraph
 from src.views import main_bp, auth_bp
-from src.admin_views import admin, BookView, ParagraphView
+from src.admin_views import admin, BookView, ParagraphView, UserView
 from src.utils import load_svg, is_punctuation_token
 
 COMMANDS = [
@@ -43,10 +43,14 @@ def initialize_extensions(app):
     # Flask-SQLAlchemy
     db.init_app(app)
 
+    # Flask-Migrate
+    migrate.init_app(app, db)
+
     # Flask-Admin
     admin.init_app(app)
     admin.add_view(BookView(Book, db.session, name="წიგნი"))
     admin.add_view(ParagraphView(Paragraph, db.session, name="პარაგრაფი"))
+    admin.add_view(UserView(User, db.session, name="მომხმარებელი"))
 
     # Flask-Login
     login_manager.init_app(app)

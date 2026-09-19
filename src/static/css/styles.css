@@ -132,12 +132,12 @@ a {
   transform: translateY(2px);
 }
 
-.nav-link {
+.custom-hover {
   position: relative;
   transition: all 0.3s ease;
   padding-bottom: 0.5rem !important;
 }
-.nav-link::after {
+.custom-hover::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -147,15 +147,15 @@ a {
   background-color: #c6946b;
   transition: width 0.3s ease;
 }
-.nav-link:hover::after {
+.custom-hover:hover::after {
   width: 100%;
 }
-.nav-link.active {
+.custom-hover.active {
   font-weight: 600;
   background-color: rgba(198, 148, 107, 0.15);
   border-radius: 0.25rem;
 }
-.nav-link.active::after {
+.custom-hover.active::after {
   width: 100%;
 }
 
