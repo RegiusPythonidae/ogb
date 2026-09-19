@@ -16,6 +16,21 @@ def index():
     books = Book.query.all()
     return render_template("main/index.html", books=books)
 
+@main_bp.route('/search')
+def search():
+    query = request.args.get('q', '').strip()
+    results = []
+    
+    if query:
+        results = Paragraph.query.filter(
+            or_(
+                Paragraph.text.ilike(f'% {query} %'),
+                Paragraph.greek_text.ilike(f'% {query} %')
+            )
+        ).all()
+    
+    return render_template("main/search_results.html", query=query, results=results)
+
 @main_bp.route('/book')
 @main_bp.route("/book/<int:book_id>")
 @main_bp.route("/book/<int:book_id>/<int:chapter_number>")
