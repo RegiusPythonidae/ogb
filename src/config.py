@@ -12,6 +12,14 @@ class Config(object):
     DB_PASS = os.environ.get("DB_PASS")
     if os.environ.get('FLASK_DB') == "prod":
         SQLALCHEMY_DATABASE_URI = f'postgresql://{DB_USER}:{DB_PASS}@217.147.233.8:5432/defaultdb'
+        SQLALCHEMY_ENGINE_OPTIONS = {
+            "pool_pre_ping": True,
+            "pool_reset_on_return": 'commit',
+            'pool_size': 20,
+            'pool_recycle': 1200,
+            'pool_timeout': 5,
+            'max_overflow': 10,
+        }
     else:
         SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(PROJECT_ROOT, 'db.sqlite')
 
